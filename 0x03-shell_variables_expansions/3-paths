@@ -1,2 +1,2 @@
 #!/bin/bash
-echo SPATH | TR ":" "\n" | wc -l
+export SPATH | tr ":" "\n" | wc -l
