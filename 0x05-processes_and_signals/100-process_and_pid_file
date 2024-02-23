@@ -1,23 +1,32 @@
-#!/usr/bin/env bash
-# Process and PID file
+#!/bin/bash
 
-file="/var/run/myscript.pid"
+# Function to handle SIGTERM signal
+sigterm_handler() {
+    echo "I hate the kill command"
+}
 
-if [ ! -e "$file" ]; then
-  touch "$file"
-fi
+# Function to handle SIGINT signal
+sigint_handler() {
+    echo "Y U no love me?!"
+}
 
-sleep 2 &
+# Function to handle SIGQUIT signal
+sigquit_handler() {
+    echo "Deleting PID file and terminating..."
+    rm -f /var/run/myscript.pid
+    exit 0
+}
 
-echo "$!" > "$file"
+# Register signal handlers
+trap 'sigterm_handler' SIGTERM
+trap 'sigint_handler' SIGINT
+trap 'sigquit_handler' SIGQUIT
 
-# prints I hate the kill command, deletes the file and exits  when receiving a SIGTERM or SIGQUIT signal
-trap 'echo "I hate the kill command"; rm "$file"; exit' SIGTERM SIGQUIT
+# Get the PID of this script and write it to the PID file
+echo $$ > /var/run/myscript.pid
 
-# prints Y U no love me?! when receiving a SIGINT signal
-trap "echo Y U no love me?!" SIGINT
-
+# Infinite loop to display "To infinity and beyond"
 while true; do
-  echo "To infinity and beyond"
-  sleep 2
+    echo "To infinity and beyond"
+    sleep 1
 done
