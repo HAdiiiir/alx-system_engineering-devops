@@ -1,32 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# This script is displaying "Holberton School" 10 times
+sudo touch /var/run/holbertonscript.pid
+sudo bash -c "echo $$ > /var/run/holbertonscript.pid"
 
-# Function to handle SIGTERM signal
-sigterm_handler() {
-    echo "I hate the kill command"
+trap interrup2 SIGINT
+trap interrup1 SIGTERM
+trap interrup3 SIGQUIT
+
+interrup3()
+{
+    sudo rm /var/run/holbertonscript.pid
+    exit $?
 }
 
-# Function to handle SIGINT signal
-sigint_handler() {
+interrup2()
+{
     echo "Y U no love me?!"
 }
 
-# Function to handle SIGQUIT signal
-sigquit_handler() {
-    echo "Deleting PID file and terminating..."
-    rm -f /var/run/myscript.pid
-    exit 0
+interrup1()
+{
+    echo "I hate the kill command"
+    sudo rm /var/run/holbertonscript.pid
+    exit $?
 }
 
-# Register signal handlers
-trap 'sigterm_handler' SIGTERM
-trap 'sigint_handler' SIGINT
-trap 'sigquit_handler' SIGQUIT
-
-# Get the PID of this script and write it to the PID file
-echo $$ > /var/run/myscript.pid
-
-# Infinite loop to display "To infinity and beyond"
-while true; do
+while true
+do
     echo "To infinity and beyond"
-    sleep 1
+    sleep 2
 done
